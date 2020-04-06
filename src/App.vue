@@ -2,7 +2,7 @@
   <div>
     <Header />
     <router-view></router-view>
-    <Footer />
+    <Footer v-if="!$route.meta.isHideFooter"/>
     <!-- 一级路由显示器 -->
   </div>
 </template>
