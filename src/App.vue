@@ -10,13 +10,19 @@
 <script type="text/ecmascript-6">
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import {reqBaseCategoryList} from "@/api";
 export default {
   name: "App",
   components: {
     Header,
     Footer
+  },
+
+  async mounted() {
+    const result = await reqBaseCategoryList() 
+    console.log('result', result)
   }
-};
+}; 
 </script>
 
 <style lang="less" scoped>
