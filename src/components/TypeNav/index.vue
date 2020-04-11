@@ -2,8 +2,7 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      
-      <div @mouseenter="isShowFirst = true" @mouseleave="hideFirst" >
+      <div @mouseenter="isShowFirst = true" @mouseleave="hideFirst">
         <h2 class="all">全部商品分类</h2>
 
         <div class="sort" @click="toSearch" v-if="isShowFirst">
@@ -14,7 +13,6 @@
               v-for="(c1, index) in categoryList"
               :key="c1.categoryId"
               @mouseenter="showSubCategorys(index)"
-              
             >
               <h3>
                 <a
@@ -83,7 +81,6 @@ export default {
   },
 
   mounted() {
-   
     // 得到当前路径路由
     const path = this.$route.path;
     // 如果不在首页指定隐藏一级分类列表
@@ -131,15 +128,26 @@ export default {
         } else if (category3id) {
           query.category3Id = category3id;
         }
-        // 跳转路由, 并携带query参数
-        this.$router.push({ path: "/search", query });
+
+        // 得到路由路径  三种情况 : / ---  /search --- /search/xxxx
+        const path = this.$route.path;
+
+        // 如果已经在搜索界面
+        if (path.indexOf("/search") === 0) {
+          // replace 返回直接 跳转home
+          this.$router.replace({ path, query });
+        } else {
+          // 没有在搜索界面
+          // 跳转路由, 并携带query参数
+          this.$router.push({ path: "/search", query });
+        }
       }
     },
 
     hideFirst() {
       // 隐藏二三级 流标
-      this.currentIndex = -1
-      
+      this.currentIndex = -1;
+
       //只有不在首页才隐藏
       if (this.$route.path !== "/") {
         this.isShowFirst = false;

@@ -50,23 +50,47 @@ export default {
     };
   },
 
+  mounted() {
+    // 通过全局事件总线 绑定 removeKeyword 事件监听
+    this.$bus.$on('removeKeyword', () => {
+      this.keyword = ''
+    });
+  },
+
   methods: {
     search() {
       // 利用router对象进行跳转
       // this.$router.push(`/search?keyword=${this.keyword}`)
       //对象形式   query参数
-      this.$router.push({path: '/search', query: {keyword: this.keyword}})
-      
-      // params参数   
+      this.$router.push({ path: "/search" });
+
+      // params参数
       // this.$router.push(`/search/${this.keyword}`)
       // 对象形式  只能name  +  params
-      if(this.keyword) {
-        this.$router.push({name: 'search', params: {keyword: this.keyword}})
-      }else{
-          this.$router.push({name: 'search'})
+      const { path, query } = this.$route;
+      if (this.keyword) {
+        // 如果当前在搜索页面
+        if (path.indexOf("/search") === 0) {
+          this.$router.push({
+            name: "search",
+            params: { keyword: this.keyword },
+            query
+          });
+        } else {
+          // 如果不在, 只需要携带params参数
+          this.$router.push({
+            name: "search",
+            params: { keyword: this.keyword }
+          });
+        }
+      } else {
+        if (path.indexOf("/search") === 0) {
+          this.$router.push({ name: "search", query });
+        } else {
+          this.$router.push({ name: "search" });
+        }
       }
 
-       
       // this.$router.replace("/search");
 
       // 方案一  OK

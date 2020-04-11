@@ -6,19 +6,20 @@ import routes from "./routes";
 
 //通用方案
 const originPush = VueRouter.prototype.push
+const originReplace = VueRouter.prototype.replace
 VueRouter.prototype.push = function (loaction, onComplete = () => {}, onAbort) {
     return originPush.call(this, loaction, onComplete, onAbort)
 }
 
 // VueRouter.prototype.replace = function (location, onComplete, onAbort = () => {}) {
-//     return originPush.call(this, location, onComplete, onAbort)
+//     return originReplace.call(this, location, onComplete, onAbort)
 // }
 
 VueRouter.prototype.replace = function (location, onComplete, onAbort) {
-    return originPush.call(this, location, onComplete, onAbort).catch(() => {})
+    return originReplace.call(this, location, onComplete, onAbort).catch(() => {})
 }
 
-Vue.use(VueRouter)
+Vue.use(VueRouter) 
 
 export default new VueRouter({
 

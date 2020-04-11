@@ -6,15 +6,23 @@ import mockAjax from "./mockAjax";
 export const reqBaseCategoryList = () => ajax('/product/getBaseCategoryList')
 
 //登录
-export const reqLogin = (mobile, password) => ajax.post('/user/passport/login', {mobile, password})
+export const reqLogin = (mobile, password) => ajax.post('/user/passport/login', {
+    mobile,
+    password
+})
 
 //请求mock的接口
 export const reqBanners = () => mockAjax.get('/banners')
 //获取所有楼层的列表数据
 export const reqFloors = () => mockAjax.get('/floors')
 
-
 // 测试接口请求函数
 // reqBanners().then(reslove => {
 //     console.log('resolve', reslove)
 // })
+
+
+// 请求搜索匹配相关数据
+export const reqProductList = (searchParams) => ajax.post('/list', searchParams)
+
+// reqProductionList({})

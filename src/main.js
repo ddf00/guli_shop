@@ -15,9 +15,17 @@ import "./mock/mokeServer";
 Vue.component('TypeNav',TypeNav)
 Vue.component('Carousel',Carousel)
 
+
 Vue.config.productionTip = false
 
 new Vue({
+
+  beforeCreate() {
+    // 将当前vm作为事件总线 挂到原型上  所有组件都可见
+    Vue.prototype.$bus = this
+  },
+
+
   render: h => h(App),
   router, // 配置路由器(内部路由才会生效)
   store, // 配置vuex的核心管理对象store  ==> 组件中可以通过$store得到store对象
