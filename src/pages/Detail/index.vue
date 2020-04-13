@@ -16,9 +16,13 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom
+            v-if="skuImageList.length > 0"
+            :imgUrl="skuImageList[currentImgIndex].imgUrl"
+            :bigImgUrl="skuImageList[currentImgIndex].imgUrl"
+          />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList @changeCurrentIndex="changeCurrentIndex" />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
@@ -78,12 +82,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" />
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addtoCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -329,6 +333,13 @@ import Zoom from "./Zoom/Zoom";
 export default {
   name: "Detail",
 
+  data() {
+    return {
+      currentImgIndex: 0, //当前图片下标
+      skuNum: 1 // 商品的数量
+    };
+  },
+
   mounted() {
     // 取出skuId params参数
     const skuId = this.$route.params.skuId;
@@ -336,7 +347,12 @@ export default {
     this.$store.dispatch("getDetailInfo", skuId);
   },
   computed: {
-    ...mapGetters(["categoryView", "skuInfo", "spuSaleAttrList"])
+    ...mapGetters([
+      "categoryView",
+      "skuInfo",
+      "spuSaleAttrList",
+      "skuImageList"
+    ])
   },
 
   components: {
@@ -345,10 +361,47 @@ export default {
   },
 
   methods: {
-    selsctValue(value,valueList) {
-      if(value.isChecked !== '1') {
-        valueList.forEach(v => {v.isChecked = '0'})
-        value.isChecked = '1'
+    selsctValue(value, valueList) {
+      if (value.isChecked !== "1") {
+        valueList.forEach(v => {
+          v.isChecked = "0";
+        });
+        value.isChecked = "1";
+      }
+    },
+
+    // 自定义事件changeCurrentIndex的回调函数
+    changeCurrentIndex(index) {
+      // 更新当前的currentImgIndex
+      this.currentImgIndex = index;
+    },
+
+    // 将当前商品添加到购物车, 成功后跳转到成功界面
+    async addtoCart() {
+      // 分发添加购物车的action
+      const query = { skuId: this.skuInfo.id, skuNum: this.skuNum };
+      // this.$store.dispatch("addToCart", { ...query, callback: this.callback });
+
+      const errorMsg = await this.$store.dispatch("addToCart", query);
+      this.callback(errorMsg);
+
+      // this.$router.push({
+      //   path: "/addCartSuccess",
+      //   query: { query }
+      // });
+    },
+
+    callback(errorMsg) {
+      // 如果失败了
+
+      const query = { skuId: this.skuInfo.id, skuNum: this.skuNum };
+      if (!errorMsg) {
+        // 跳转前将skuInfo 保存到sessionStorage
+        window.sessionStorage.setItem('SKU_INFO_KEY', JSON.stringify(this.skuInfo))
+
+        this.$router.push({ path: "/addCartSuccess", query });
+      } else {
+        alert(errorMsg);
       }
     }
   }

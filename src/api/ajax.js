@@ -19,7 +19,6 @@ ajax.interceptors.request.use((config) => {
     //显示进度条
     NProgress.start()
 
-
     //必须返回config
     return config
 })
