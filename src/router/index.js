@@ -25,5 +25,14 @@ export default new VueRouter({
 
     mode: 'history',
 
-    routes
+    routes,
+ 
+    // 配置滚动行为  =>跳转路由时自动滚动到最上面
+    scrollBehavior(to, from, savedPosition){
+        // 期望滚动到的位置
+        return{
+            x: 0,
+            y: 0
+        }
+    }
 })

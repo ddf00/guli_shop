@@ -66,9 +66,10 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="javascript:;">
+                    <router-link :to="`/detail/${goods.id}`">
+                      <!-- <router-link :to="{name:'detail', params: {skuId: goods.id}}"> -->
                       <img :src="goods.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -76,12 +77,9 @@
                       <i>{{goods.price}}</i>
                     </strong>
                   </div>
-                  <div class="attr">
-                    <a
-                      href="javascript:;"
-                      title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中"
-                    >{{goods.title}}</a>
-                  </div>
+                  <router-link :to="{name:'detail', params: {skuId: goods.id}}">>
+                    <a href="javascript:;">{{goods.title}}</a>
+                  </router-link>
                   <div class="commit">
                     <i class="command">
                       已有
@@ -96,39 +94,15 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted">
-                  <span>...</span>
-                </li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div>
-                <span>共10页&nbsp;</span>
-              </div>
-            </div>
-          </div>
+          <Pagination
+            :pageConfig="{
+               total: productList.total,
+               showPageNo: 3,
+               pageNo: options.pageNo,
+               pageSize: options.pageSize
+          }"
+            @changeCurrentPage="getProducList"
+          />
         </div>
       </div>
     </div>
@@ -136,8 +110,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
+import state from "../../store/state";
 export default {
   name: "Search",
 
@@ -149,7 +124,7 @@ export default {
         category3Id: "", // 三级分类iD
         categoryName: "", // 分类名称
         keyword: "", // 搜索关键词
-        trademark: "", // 品牌ID: 品牌名称
+        // trademark: "", // 品牌ID: 品牌名称
         order: "1:desc", // 排序方式: 综合1, 价格2, 升序asc, 降序desc
         pageNo: 1, // 当前第几页
         pageSize: 5, // 每页最多显示几条数据
@@ -196,14 +171,26 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      productList: state => state.search.productList
+    }),
     ...mapGetters(["goodsList"])
   },
 
   methods: {
-    // 异步搜索商品列表
-    getProducList() {
+    // 异步搜索商品列表   根据指定异步回去参数列表 默认值为1
+    getProducList(currentPage = 1) {
+      this.options.pageNo = currentPage;
       this.$store.dispatch("getProductList", this.options);
     },
+
+    // 当页码发生改变时的监听回调
+    // changeCurrentPage(currentPage) {
+    //   // 更新当前页面的条件数据
+    //   // this.options.pageNo = currentPage
+    //   // 重新请求获取商品列表
+    //   this.getProducList()
+    // },
 
     // 判断指定指定排序是是否选中
     isActive(orderFlag) {
@@ -238,12 +225,12 @@ export default {
     // 要得到显示的标识排序方式的图标   ⬇⬆
     getOrderIcon(orderFlag) {
       // 得到当前排序标记
-      const [flag, orderType] = this.options.order.split(':')
+      const [flag, orderType] = this.options.order.split(":");
       if (orderFlag === flag) {
         // 如果排序标记相同  返回排序图标
-        return orderType === 'desc' ? '⬇' : '⬆'
+        return orderType === "desc" ? "⬇" : "⬆";
       } else {
-        return ''
+        return "";
       }
     },
 
@@ -271,9 +258,9 @@ export default {
     },
     // 设置新的品牌
     setTrademark(id, name) {
-      // 更新options 中的 tradmark
-      this.options.trademark = name;
-
+      // 更新options 中的 tradmark   不会触发界面更新
+      // this.options.trademark = id + ':' + name;
+      this.$set(this.options, "trademark", id + ":" + name);
       // 重新获取商品列表
       this.getProducList();
     },
@@ -299,7 +286,10 @@ export default {
 
     // 移除品牌条件
     removeTrademark() {
-      this.options.trademark = "";
+      // this.options.trademark = "";
+      // 删除已有属性
+      // delete this.options.trademark
+      this.$delete(this.options, "trademark");
       this.getProducList();
     }
   }

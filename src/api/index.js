@@ -26,3 +26,9 @@ export const reqFloors = () => mockAjax.get('/floors')
 export const reqProductList = (searchParams) => ajax.post('/list', searchParams)
 
 // reqProductionList({})
+
+// 详情Detail接口
+// 获取商品详情信息
+export const reqDetailInfo = (skuId) => ajax.get(`/item/${skuId}`)
+
+
