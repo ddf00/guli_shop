@@ -6,15 +6,22 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 已登录显示 -->
+          <p v-if="userInfo.name">
+            <span>{{userInfo.name}}</span>
+            &nbsp;&nbsp;&nbsp;
+            <a href="JavaScript:;" @click="logout">退出</a>
+          </p>
+          <!-- 未登录显示 -->
+          <p v-else>
             <span>请</span>
             <router-link to="/login">登录</router-link>
-            <router-link class="register" to="/register ">免费注册</router-link>
+            <router-link class="register" to="/register">免费注册</router-link>
           </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="center">我的订单</router-link>
+          <router-link to="/shopcart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -42,6 +49,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { mapState } from "vuex";
 export default {
   name: "Header",
   data() {
@@ -50,14 +58,28 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      userInfo: state => state.user.userInfo
+    })
+  },
+
   mounted() {
     // 通过全局事件总线 绑定 removeKeyword 事件监听
-    this.$bus.$on('removeKeyword', () => {
-      this.keyword = ''
+    this.$bus.$on("removeKeyword", () => {
+      this.keyword = "";
     });
   },
 
   methods: {
+    // 退出登录
+    async logout() {
+      try{
+        await this.$store.dispatch('logout')
+      }catch(error) {
+        alert(error.message)
+      }
+    },
     search() {
       // 利用router对象进行跳转
       // this.$router.push(`/search?keyword=${this.keyword}`)

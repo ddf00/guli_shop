@@ -19,7 +19,7 @@
             class="sui-btn btn-xlarge"
             :to="{name: 'detail', params: {skuId:$route.query.skuId}}"
           >查看商品详情</router-link>
-          <a href="javascript:">去购物车结算 ></a>
+          <router-link to="/shopcart">去购物车结算 ></router-link>
         </div>
       </div>
     </div>

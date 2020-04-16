@@ -3,6 +3,7 @@
 import axios from "axios";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import store from "@/store";
 
 //只显示水平进度条
 // NProgress.configure({showSpinner: false})
@@ -18,6 +19,17 @@ const ajax = axios.create({
 ajax.interceptors.request.use((config) => {
     //显示进度条
     NProgress.start()
+
+
+    // 如果有了token 请求都自动携带token
+    const token = store.state.user.userInfo.token
+    if (token) {
+        config.headers['token'] = token 
+    }
+    
+    //  请求头携带userTempId 
+     config.headers['userTempId'] = store.state.user.userTempId
+
 
     //必须返回config
     return config
@@ -38,7 +50,7 @@ ajax.interceptors.response.use(
 
         //中断Promise链
         // return new Promise(() => {})
-        
+
         // 返回失败的Promise
         return Promise.reject(error)
     }
