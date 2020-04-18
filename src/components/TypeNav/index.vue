@@ -4,51 +4,52 @@
     <div class="container">
       <div @mouseenter="isShowFirst = true" @mouseleave="hideFirst">
         <h2 class="all">全部商品分类</h2>
-
-        <div class="sort" @click="toSearch" v-if="isShowFirst">
-          <div class="all-sort-list2">
-            <div
-              class="item"
-              :class="{item_on: currentIndex === index}"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              @mouseenter="showSubCategorys(index)"
-            >
-              <h3>
-                <a
-                  href="javascript:;"
-                  :data-categoryName="c1.categoryName"
-                  :data-category1Id="c1.categoryId"
-                >{{c1.categoryName}}</a>
-                <!-- <router-link :to="{path: '/search', query: {categoryName: c1.categoryName, category1Id: c1.categoryId}}">{{c1.categoryName}}</router-link> -->
-              </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
-                    <dt>
-                      <a
-                        href="javascript:;"
-                        :data-categoryName="c2.categoryName"
-                        :data-category2Id="c2.categoryId"
-                      >{{c2.categoryName}}</a>
-                      <!-- <router-link :to="{path: '/search', query: {categoryName: c2.categoryName, category2Id: c2.categoryId}}">{{c2.categoryName}} </router-link> -->
-                    </dt>
-                    <dd>
-                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+        <transition name="move">
+          <div class="sort" @click="toSearch" v-if="isShowFirst">
+            <div class="all-sort-list2">
+              <div
+                class="item"
+                :class="{item_on: currentIndex === index}"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                @mouseenter="showSubCategorys(index)"
+              >
+                <h3>
+                  <a
+                    href="javascript:;"
+                    :data-categoryName="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                  >{{c1.categoryName}}</a>
+                  <!-- <router-link :to="{path: '/search', query: {categoryName: c1.categoryName, category1Id: c1.categoryId}}">{{c1.categoryName}}</router-link> -->
+                </h3>
+                <div class="item-list clearfix">
+                  <div class="subitem">
+                    <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
+                      <dt>
                         <a
                           href="javascript:;"
-                          :data-categoryName="c3.categoryName"
-                          :data-category3Id="c3.categoryId"
-                        >{{c3.categoryName}}</a>
-                        <!-- <router-link :to="{path: '/search', query: {categoryName: c3.categoryName, category3Id: c3.categoryId}}">{{c3.categoryName}}</router-link> -->
-                      </em>
-                    </dd>
-                  </dl>
+                          :data-categoryName="c2.categoryName"
+                          :data-category2Id="c2.categoryId"
+                        >{{c2.categoryName}}</a>
+                        <!-- <router-link :to="{path: '/search', query: {categoryName: c2.categoryName, category2Id: c2.categoryId}}">{{c2.categoryName}} </router-link> -->
+                      </dt>
+                      <dd>
+                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                          <a
+                            href="javascript:;"
+                            :data-categoryName="c3.categoryName"
+                            :data-category3Id="c3.categoryId"
+                          >{{c3.categoryName}}</a>
+                          <!-- <router-link :to="{path: '/search', query: {categoryName: c3.categoryName, category3Id: c3.categoryId}}">{{c3.categoryName}}</router-link> -->
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
 
       <nav class="nav">
@@ -193,6 +194,14 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
+      &.move-enter-active, &.move-leave-active {
+        transition: all 0.3s;
+      }
+      &.move-enter, &.move-leave-to {
+        opacity: 0;
+        height: 0;
+        
+      }
       .all-sort-list2 {
         .item {
           h3 {

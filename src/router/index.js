@@ -42,6 +42,7 @@ const router = new VueRouter({
 const checkPaths = ['/trade', '/pay', '/center']
 // 添加全局前置守卫
 router.beforeEach((to, from, next) => {
+    console.log('-----', to.path)
     // 跳转目标路径
     const targetPath = to.path
     if (checkPaths.find(path => targetPath.indexOf(path) === 0)) { // 如果targetPath 在 checkPaths 中 // 需要检查

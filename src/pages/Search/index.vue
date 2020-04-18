@@ -68,7 +68,7 @@
                   <div class="p-img">
                     <router-link :to="`/detail/${goods.id}`">
                       <!-- <router-link :to="{name:'detail', params: {skuId: goods.id}}"> -->
-                      <img :src="goods.defaultImg" />
+                      <img v-lazy="goods.defaultImg" />
                     </router-link>
                   </div>
                   <div class="price">
@@ -127,7 +127,7 @@ export default {
         // trademark: "", // 品牌ID: 品牌名称
         order: "1:desc", // 排序方式: 综合1, 价格2, 升序asc, 降序desc
         pageNo: 1, // 当前第几页
-        pageSize: 5, // 每页最多显示几条数据
+        pageSize: 10, // 每页最多显示几条数据
         props: [] // 多个属性条件组件的数组[属性ID: 属性值, 属性名]
       }
     };

@@ -42,3 +42,29 @@ export const reqLogin = (mobile, password) => ajax.post('/user/passport/login', 
 export const reqlogout = () => ajax.get('/user/passport/logout')
 // 注册Register接口
 export const reqRegister = (userInfo) => ajax.post('/user/passport/register',userInfo)
+
+
+// 获取提交订单交易信息
+export const reqTradeInfo = () => ajax.get('/order/auth/trade')
+// 获取我的订单列表                                                    //  页码   每一页数量
+export const reqMyOrders = (page, limit) => ajax.get(`/order/auth/${page}/${limit}`)
+
+// 提交订单  
+/* 
+    tradeNo: 交易号, 以query 参数提交
+    orderInfo: 订单对象信息, 以请求体json数据提交
+*/                   
+export const reqSubmitOrder = (tradeNo,orderInfo) => ajax({
+    url: '/order/auth/submitOrder',
+    method: 'POST',
+    params: {
+        tradeNo
+    },
+    data: orderInfo
+})
+// 获取订单支付信息
+// orderId: 订单号
+export const reqPayInfo = (orderId) => ajax.get(`/payment/weixin/createNative/${orderId}`)
+
+// 查询支付订单状态
+export const reqOrderStatus = (orderId) => ajax.get(`/payment/weixin/queryPayStatus/${orderId}`)

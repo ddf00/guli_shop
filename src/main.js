@@ -12,6 +12,22 @@ import Pagination from "./components/Pagination";
 // 加载mock接口文档模块
 import "./mock/mokeServer";
 
+import * as API from "./api"; // 引入所有包含所有接请求函数方法的对象
+
+import "./element"  // elementment-ui组件
+import loading from "@/assets/loading.gif";
+
+import VueLazyload from 'vue-lazyload';
+
+Vue.use(VueLazyload, {
+  loading, // 指定未加载图片loading图片
+})
+
+
+Vue.prototype.$API = API // 所有的组件都可通过this.$API来访问
+
+
+
 //注册全局组件
 Vue.component('TypeNav',TypeNav)
 Vue.component('Carousel',Carousel)
@@ -35,4 +51,4 @@ new Vue({
 }).$mount('#app')
 
 
-console.log('mock接口执行了')
+// console.log('mock接口执行了')

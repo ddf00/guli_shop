@@ -74,10 +74,12 @@ export default {
   methods: {
     // 退出登录
     async logout() {
-      try{
-        await this.$store.dispatch('logout')
-      }catch(error) {
-        alert(error.message)
+      try {
+        await this.$store.dispatch("logout");
+        // 再跳转到当前路由界面   退出登录有自动跳转到首也
+        this.$router.replace('/');
+      } catch (error) {
+        alert(error.message);                                  
       }
     },
     search() {
